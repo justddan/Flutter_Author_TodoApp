@@ -119,7 +119,10 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
                 InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    TodoController.to.deleteOngoingTodo(widget.model);
+                    TodoController.to.deleteTodo(
+                      TodoController.to.ongoingTodos,
+                      widget.model,
+                    );
                   },
                   child: const Icon(
                     Icons.delete,

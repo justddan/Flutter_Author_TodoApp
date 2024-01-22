@@ -99,7 +99,13 @@ class _HomeScreenState extends State<HomeScreen>
                       );
                     },
                     itemCount: todoController.ongoingTodos.length,
-                    onReorder: TodoController.to.reorderOngoingTodo,
+                    onReorder: (oldIndex, newIndex) {
+                      TodoController.to.reorderTodo(
+                        todoController.ongoingTodos,
+                        oldIndex,
+                        newIndex,
+                      );
+                    },
                   ),
                 ),
               ],
@@ -119,7 +125,13 @@ class _HomeScreenState extends State<HomeScreen>
                   index: index,
                 );
               },
-              onReorder: TodoController.to.reorderCompletedTodo,
+              onReorder: (oldIndex, newIndex) {
+                TodoController.to.reorderTodo(
+                  todoController.completedTodos,
+                  oldIndex,
+                  newIndex,
+                );
+              },
             );
           }),
         ],

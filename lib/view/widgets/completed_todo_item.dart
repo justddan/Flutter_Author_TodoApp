@@ -31,7 +31,10 @@ class CompletedTodoItem extends StatelessWidget {
         trailing: InkWell(
           splashColor: Colors.transparent,
           onTap: () {
-            TodoController.to.deleteCompletedTodo(model);
+            TodoController.to.deleteTodo(
+              TodoController.to.completedTodos,
+              model,
+            );
           },
           child: const Icon(
             Icons.delete,

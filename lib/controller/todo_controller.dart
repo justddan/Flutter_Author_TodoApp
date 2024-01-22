@@ -45,15 +45,9 @@ class TodoController extends GetxController {
     saveTodo();
   }
 
-  void deleteOngoingTodo(TodoModel todo) {
-    int index = ongoingTodos.indexWhere((element) => element.id == todo.id);
-    ongoingTodos.removeAt(index);
-    saveTodo();
-  }
-
-  void deleteCompletedTodo(TodoModel todo) {
-    int index = completedTodos.indexWhere((element) => element.id == todo.id);
-    completedTodos.removeAt(index);
+  void deleteTodo(List<TodoModel> todos, TodoModel todo) {
+    int index = todos.indexWhere((element) => element.id == todo.id);
+    todos.removeAt(index);
     saveTodo();
   }
 
@@ -65,19 +59,12 @@ class TodoController extends GetxController {
     saveTodo();
   }
 
-  void reorderOngoingTodo(int oldIndex, int newIndex) {
+  void reorderTodo(List<TodoModel> todos, int oldIndex, int newIndex) {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    final item = ongoingTodos.removeAt(oldIndex);
-    ongoingTodos.insert(newIndex, item);
-  }
-
-  void reorderCompletedTodo(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    final item = completedTodos.removeAt(oldIndex);
-    completedTodos.insert(newIndex, item);
+    final item = todos.removeAt(oldIndex);
+    todos.insert(newIndex, item);
+    saveTodo();
   }
 }
