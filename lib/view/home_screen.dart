@@ -35,106 +35,132 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        bottom: TabBar(
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          bottom: TabBar(
+            controller: _tabController,
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            labelPadding: const EdgeInsets.all(5),
+            indicatorPadding: const EdgeInsets.symmetric(
+              vertical: 5,
+            ),
+            indicator: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.white,
+            ),
+            tabs: const [
+              CommonTab(
+                title: "진행 중",
+              ),
+              CommonTab(
+                title: "완료",
+              ),
+            ],
+          ),
+        ),
+        body: TabBarView(
           controller: _tabController,
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          labelPadding: const EdgeInsets.all(5),
-          indicatorPadding: const EdgeInsets.symmetric(
-            vertical: 5,
-          ),
-          indicator: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-          ),
-          tabs: const [
-            CommonTab(
-              title: "진행 중",
-            ),
-            CommonTab(
-              title: "완료",
-            ),
+          children: [
+            Obx(() {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 15),
+                    child: TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: textEditingController,
+                      decoration: InputDecoration(
+                        labelText: 'Add New Todo',
+                        suffix: InkWell(
+                          onTap: () {
+                            if (textEditingController.text.isNotEmpty) {
+                              TodoController.to.addTodo(
+                                TodoModel(
+                                  id: "todoId_${TodoController.to.ongoingTodos.length + TodoController.to.completedTodos.length}",
+                                  title: textEditingController.text,
+                                ),
+                              );
+                              textEditingController.clear();
+                              FocusScope.of(context).unfocus();
+                            }
+                          },
+                          child: const Icon(
+                            Icons.add_rounded,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      onFieldSubmitted: (value) {
+                        if (value.isNotEmpty) {
+                          TodoController.to.addTodo(
+                            TodoModel(
+                              id: "todoId_${TodoController.to.ongoingTodos.length + TodoController.to.completedTodos.length}",
+                              title: value,
+                            ),
+                          );
+                          textEditingController.clear();
+                          FocusScope.of(context).unfocus();
+                        }
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: ReorderableListView.builder(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 10,
+                        horizontal: 15,
+                      ),
+                      itemBuilder: (context, index) {
+                        return OngoingTodoItem(
+                          key: ValueKey("ongoingTodo_$index"),
+                          model: todoController.ongoingTodos[index],
+                          index: index,
+                        );
+                      },
+                      itemCount: todoController.ongoingTodos.length,
+                      onReorder: (oldIndex, newIndex) {
+                        TodoController.to.reorderTodo(
+                          todoController.ongoingTodos,
+                          oldIndex,
+                          newIndex,
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }),
+            Obx(() {
+              return ReorderableListView.builder(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 10,
+                  horizontal: 15,
+                ),
+                itemCount: todoController.completedTodos.length,
+                itemBuilder: (context, index) {
+                  return CompletedTodoItem(
+                    key: ValueKey("completedTodo_$index"),
+                    model: todoController.completedTodos[index],
+                    index: index,
+                  );
+                },
+                onReorder: (oldIndex, newIndex) {
+                  TodoController.to.reorderTodo(
+                    todoController.completedTodos,
+                    oldIndex,
+                    newIndex,
+                  );
+                },
+              );
+            }),
           ],
         ),
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          Obx(() {
-            return Column(
-              children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  child: TextField(
-                    controller: textEditingController,
-                    decoration:
-                        const InputDecoration(labelText: 'Add New Todo'),
-                    onSubmitted: (value) {
-                      if (value.isNotEmpty) {
-                        TodoController.to.addTodo(
-                          TodoModel(
-                            id: "todoId_${TodoController.to.ongoingTodos.length + TodoController.to.completedTodos.length}",
-                            title: value,
-                          ),
-                        );
-                        textEditingController.clear();
-                      }
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: ReorderableListView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                      horizontal: 15,
-                    ),
-                    itemBuilder: (context, index) {
-                      return OngoingTodoItem(
-                        key: ValueKey("ongoingTodo_$index"),
-                        model: todoController.ongoingTodos[index],
-                        index: index,
-                      );
-                    },
-                    itemCount: todoController.ongoingTodos.length,
-                    onReorder: (oldIndex, newIndex) {
-                      TodoController.to.reorderTodo(
-                        todoController.ongoingTodos,
-                        oldIndex,
-                        newIndex,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          }),
-          Obx(() {
-            return ReorderableListView.builder(
-              padding: const EdgeInsets.symmetric(
-                vertical: 10,
-                horizontal: 15,
-              ),
-              itemCount: todoController.completedTodos.length,
-              itemBuilder: (context, index) {
-                return CompletedTodoItem(
-                  key: ValueKey("completedTodo_$index"),
-                  model: todoController.completedTodos[index],
-                  index: index,
-                );
-              },
-              onReorder: (oldIndex, newIndex) {
-                TodoController.to.reorderTodo(
-                  todoController.completedTodos,
-                  oldIndex,
-                  newIndex,
-                );
-              },
-            );
-          }),
-        ],
       ),
     );
   }

@@ -46,6 +46,8 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
       tileColor: Colors.white,
       title: isEdit
           ? TextFormField(
+              keyboardType: TextInputType.text,
+              autofocus: true,
               controller: textEditingController,
               decoration: InputDecoration(
                 labelText: 'Edit Todo',
