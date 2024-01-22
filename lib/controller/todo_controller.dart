@@ -5,11 +5,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TodoController extends GetxController {
   static TodoController get to => Get.find();
 
-  RxList<TodoModel> todos = <TodoModel>[].obs;
-  var items = List<String>.generate(10, (index) => 'Item $index').obs;
-
-  var ongoingTodos = [];
-  var completedTodos = [];
+  var ongoingTodos = <TodoModel>[].obs;
+  var completedTodos = <TodoModel>[].obs;
 
   @override
   void onInit() {
@@ -19,48 +16,52 @@ class TodoController extends GetxController {
 
   Future<void> getTodo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String todoString = prefs.getString('todo_key')!;
+    final String todoString = prefs.getString('todo_key') ?? "";
+    if (todoString != "") {
+      final result = todoString.split("^");
 
-    final result = TodoModel.decode(todoString);
-
-    todos.value = result;
+      ongoingTodos.value = TodoModel.decode(result[0]);
+      completedTodos.value = TodoModel.decode(result[1]);
+    }
   }
 
   Future<void> saveTodo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String encodedData = TodoModel.encode(todos);
-    await prefs.setString('todo_key', encodedData);
+    final String encodedOngoingTodo = TodoModel.encode(ongoingTodos);
+    final String encodedCompletedTodo = TodoModel.encode(completedTodos);
+    await prefs.setString(
+        'todo_key', "$encodedOngoingTodo^$encodedCompletedTodo");
   }
 
   void addTodo(TodoModel todo) {
-    todos.add(todo);
+    ongoingTodos.add(todo);
     saveTodo();
   }
 
   void completeTodo(TodoModel todo) {
-    int index = todos.indexWhere((element) => element.id == todo.id);
-    todos[index] = todo.copyWith(
-      isCompleted: true,
-    );
+    int index = ongoingTodos.indexWhere((element) => element.id == todo.id);
+    ongoingTodos.removeAt(index);
+    completedTodos.add(todo);
     saveTodo();
   }
 
-  void deleteTodo(TodoModel todo) {
-    int index = todos.indexWhere((element) => element.id == todo.id);
-    todos.removeAt(index);
+  void deleteOngoingTodo(TodoModel todo) {
+    int index = ongoingTodos.indexWhere((element) => element.id == todo.id);
+    ongoingTodos.removeAt(index);
+    saveTodo();
+  }
+
+  void deleteCompletedTodo(TodoModel todo) {
+    int index = completedTodos.indexWhere((element) => element.id == todo.id);
+    completedTodos.removeAt(index);
     saveTodo();
   }
 
   void editTodo(TodoModel todo, String value) {
-    int index = todos.indexWhere((element) => element.id == todo.id);
-    todos[index] = todo.copyWith(
+    int index = ongoingTodos.indexWhere((element) => element.id == todo.id);
+    ongoingTodos[index] = todo.copyWith(
       title: value,
     );
-    saveTodo();
-  }
-
-  void insertTodo(TodoModel todo, int index) {
-    todos.insert(index, todo);
     saveTodo();
   }
 
@@ -68,7 +69,7 @@ class TodoController extends GetxController {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
-    final item = todos.removeAt(oldIndex);
-    todos.insert(newIndex, item);
+    final item = ongoingTodos.removeAt(oldIndex);
+    ongoingTodos.insert(newIndex, item);
   }
 }

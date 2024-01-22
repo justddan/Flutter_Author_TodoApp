@@ -3,23 +3,19 @@ import 'dart:convert';
 class TodoModel {
   String id;
   String title;
-  bool isCompleted;
 
   TodoModel({
     required this.id,
     required this.title,
-    this.isCompleted = false,
   });
 
   TodoModel copyWith({
     String? id,
     String? title,
-    bool? isCompleted,
   }) {
     return TodoModel(
       id: id ?? this.id,
       title: title ?? this.title,
-      isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
@@ -27,14 +23,12 @@ class TodoModel {
     return TodoModel(
       id: jsonData['id'],
       title: jsonData['title'],
-      isCompleted: jsonData['isCompleted'],
     );
   }
 
   static Map<String, dynamic> toMap(TodoModel todo) => {
         'id': todo.id,
         'title': todo.title,
-        'isCompleted': todo.isCompleted,
       };
 
   static String encode(List<TodoModel> todos) => json.encode(

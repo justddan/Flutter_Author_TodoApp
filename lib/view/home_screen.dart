@@ -1,7 +1,8 @@
 import 'package:author_todo/controller/todo_controller.dart';
+import 'package:author_todo/model/todo_model.dart';
 import 'package:author_todo/view/widgets/common_tab.dart';
-import 'package:author_todo/view/widgets/completed_page.dart';
-import 'package:author_todo/view/widgets/ongoing_page.dart';
+import 'package:author_todo/view/widgets/completed_todo_item.dart';
+import 'package:author_todo/view/widgets/ongoing_todo_item.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -62,17 +63,56 @@ class _HomeScreenState extends State<HomeScreen>
         controller: _tabController,
         children: [
           Obx(() {
-            var todos = todoController.todos
-                .where((t) => t.isCompleted == false)
-                .toList();
-            return OngoingPage(todos: todos);
+            return Column(
+              children: [
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                  child: TextField(
+                    controller: textEditingController,
+                    decoration:
+                        const InputDecoration(labelText: 'Add New Todo'),
+                    onSubmitted: (value) {
+                      if (value.isNotEmpty) {
+                        TodoController.to.addTodo(
+                          TodoModel(
+                            id: "todoId_${TodoController.to.ongoingTodos.length + TodoController.to.completedTodos.length}",
+                            title: value,
+                          ),
+                        );
+                        textEditingController.clear();
+                      }
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: ReorderableListView.builder(
+                    itemBuilder: (context, index) {
+                      return OngoingTodoItem(
+                        key: ValueKey("todo_$index"),
+                        model: todoController.ongoingTodos[index],
+                        index: index,
+                      );
+                    },
+                    itemCount: todoController.ongoingTodos.length,
+                    onReorder: TodoController.to.reorderTodo,
+                  ),
+                ),
+              ],
+            );
           }),
           Obx(() {
-            var todos = todoController.todos
-                .where((t) => t.isCompleted == true)
-                .toList();
-            return CompletedPage(
-              todos: todos,
+            return ListView.builder(
+              padding: const EdgeInsets.symmetric(
+                vertical: 10,
+                horizontal: 15,
+              ),
+              itemCount: todoController.completedTodos.length,
+              itemBuilder: (context, index) {
+                return CompletedTodoItem(
+                  model: todoController.completedTodos[index],
+                );
+              },
             );
           }),
         ],

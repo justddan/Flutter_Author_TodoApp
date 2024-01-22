@@ -35,6 +35,12 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    textEditingController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ListTile(
       tileColor: Colors.white,
@@ -105,7 +111,7 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
                 InkWell(
                   splashColor: Colors.transparent,
                   onTap: () {
-                    TodoController.to.deleteTodo(widget.model);
+                    TodoController.to.deleteOngoingTodo(widget.model);
                   },
                   child: const Icon(
                     Icons.delete,
