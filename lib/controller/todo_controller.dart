@@ -30,7 +30,9 @@ class TodoController extends GetxController {
     final String encodedOngoingTodo = TodoModel.encode(ongoingTodos);
     final String encodedCompletedTodo = TodoModel.encode(completedTodos);
     await prefs.setString(
-        'todo_key', "$encodedOngoingTodo^$encodedCompletedTodo");
+      'todo_key',
+      "$encodedOngoingTodo^$encodedCompletedTodo",
+    );
   }
 
   void addTodo(TodoModel todo) {
