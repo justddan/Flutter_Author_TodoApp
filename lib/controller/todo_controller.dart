@@ -65,11 +65,19 @@ class TodoController extends GetxController {
     saveTodo();
   }
 
-  void reorderTodo(int oldIndex, int newIndex) {
+  void reorderOngoingTodo(int oldIndex, int newIndex) {
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
     final item = ongoingTodos.removeAt(oldIndex);
     ongoingTodos.insert(newIndex, item);
+  }
+
+  void reorderCompletedTodo(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final item = completedTodos.removeAt(oldIndex);
+    completedTodos.insert(newIndex, item);
   }
 }

@@ -73,10 +73,18 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
                 editCompleted(value);
               },
             )
-          : Text(
-              widget.model.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+          : Row(
+              children: [
+                ReorderableDragStartListener(
+                  index: widget.index,
+                  child: const Icon(Icons.drag_handle),
+                ),
+                Text(
+                  widget.model.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ),
       trailing: isEdit
           ? null
@@ -116,10 +124,6 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
                   child: const Icon(
                     Icons.delete,
                   ),
-                ),
-                ReorderableDragStartListener(
-                  index: widget.index,
-                  child: const Icon(Icons.drag_handle),
                 ),
               ],
             ),

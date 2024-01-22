@@ -87,22 +87,26 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 Expanded(
                   child: ReorderableListView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 15,
+                    ),
                     itemBuilder: (context, index) {
                       return OngoingTodoItem(
-                        key: ValueKey("todo_$index"),
+                        key: ValueKey("ongoingTodo_$index"),
                         model: todoController.ongoingTodos[index],
                         index: index,
                       );
                     },
                     itemCount: todoController.ongoingTodos.length,
-                    onReorder: TodoController.to.reorderTodo,
+                    onReorder: TodoController.to.reorderOngoingTodo,
                   ),
                 ),
               ],
             );
           }),
           Obx(() {
-            return ListView.builder(
+            return ReorderableListView.builder(
               padding: const EdgeInsets.symmetric(
                 vertical: 10,
                 horizontal: 15,
@@ -110,9 +114,12 @@ class _HomeScreenState extends State<HomeScreen>
               itemCount: todoController.completedTodos.length,
               itemBuilder: (context, index) {
                 return CompletedTodoItem(
+                  key: ValueKey("completedTodo_$index"),
                   model: todoController.completedTodos[index],
+                  index: index,
                 );
               },
+              onReorder: TodoController.to.reorderCompletedTodo,
             );
           }),
         ],
