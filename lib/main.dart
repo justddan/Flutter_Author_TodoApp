@@ -35,6 +35,7 @@ class TodoApp extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
           ),
         ),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
       home: const HomeScreen(),
     );
