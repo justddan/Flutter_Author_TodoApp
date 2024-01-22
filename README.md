@@ -31,7 +31,7 @@
   - ReorderableListView를 이용하여 리스트의 순서 변경 기능을 구현했습니다.
   - 키보드가 올라올 때 키보드 외의 화면을 누르면 키보드가 내려가도록 했습니다.
 
-### controller
+### Controller
 
 - todo_controller.dart
   - GetX로 상태관리를 진행하였으며, 기능 구현을 위해 두 개의 배열(진행 중인 Todo 배열, 완료된 Todo 배열)을 선언했습니다.
