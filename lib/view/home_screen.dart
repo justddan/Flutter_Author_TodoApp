@@ -96,6 +96,7 @@ class _HomeScreenState extends State<HomeScreen>
                           ),
                         ),
                       ),
+                      style: const TextStyle(color: Colors.white),
                       onFieldSubmitted: (value) {
                         if (value.isNotEmpty) {
                           TodoController.to.addTodo(

@@ -24,6 +24,7 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
     setState(() {
       isEdit = !isEdit;
     });
+    FocusScope.of(context).unfocus();
   }
 
   void editCompleted(String value) {
