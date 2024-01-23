@@ -81,10 +81,12 @@ class _OngoingTodoItemState extends State<OngoingTodoItem> {
                   index: widget.index,
                   child: const Icon(Icons.drag_handle),
                 ),
-                Text(
-                  widget.model.title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                Flexible(
+                  child: Text(
+                    widget.model.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
               ],
             ),
